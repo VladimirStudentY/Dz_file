@@ -17,6 +17,7 @@ public class Main {
         initGames();
         gamerecording();
         fileDelete("D:/Games/savegames/", "dat");
+        logSave(textLog.toString());
     }
 
     public static void main(String[] args) throws IOException {
@@ -27,24 +28,24 @@ public class Main {
     private void initGames() {
         createDir(dir, subcatalogs);
         fileCreate(arrayFile);
-        textLog.append("Инициализация завершена .");
-        System.out.println(textLog);
+        textLog.append("Инициализация завершена .\n");
         logSave(textLog.toString());
+        System.out.println(textLog);
+
     }
 
     // ---------------------
     private void gamerecording() throws IOException {
+        textLog = new StringBuilder("\n"+new Date());
         saveGame("D:/Games/savegames/", 350, 100, 5, 300.25);
         saveGame("D:/Games/savegames/", 400, 85, 6, 350.25);
         saveGame("D:/Games/savegames/", 250, 65, 6, 150.5);
         logSave(textLog.toString());
-        // allFilesInDir("D:/Games/savegames/");
         zipFilesAll("D:/Games/savegames/");
     }
 
     // ---------------------
     private void createDir(String[] array, String[] subcatalogs) {
-
         for (String tempArray : array) {
             createKatalog("D:/Games" + "/" + tempArray);
         }
@@ -152,23 +153,25 @@ public class Main {
 
     // ********************
     private void fileDelete(String dirPath, String ext) {
+        textLog =new StringBuilder("\n"+new Date());
         File file = new File(dirPath);
         if (!file.exists()) System.out.println(dirPath + " папка не существует");
         File[] listFiles = file.listFiles(new MyFileNameFilter(ext));
         if (listFiles.length == 0) {
-            System.out.println(dirPath + " не содержит файлов с расширением " + ext);
+            textLog.append("\n\t" +dirPath + " не содержит файлов с расширением " + ext);
         } else {
-            for (File f : listFiles)
-                System.out.println("Файл: " + dirPath + File.separator + f.getName() + " " + f.getAbsolutePath());
-
-//            if(del.delete())
-//            {
-//                System.out.println("File deleted successfully");
-//            }
-//            else
-//            {
-//                System.out.println("Failed to delete the file");
-//            }
+            for (File f : listFiles) {
+                try {
+                    File fileD = new File(String.valueOf(f));
+                    if (fileD.delete()) {
+                        textLog.append("\n\t" +fileD.getName() + "\tУспешно удалён .");
+                    } else {
+                        textLog.append("Sorry, unable to delete the file.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
         }
     }
