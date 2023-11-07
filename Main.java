@@ -12,6 +12,9 @@ public class Main {
     int index = 0;
     StringBuilder textLog = new StringBuilder(new Date() + "\n");
     ArrayList<String> filesInDir = new ArrayList<>();
+    GameProgress gamePr= new GameProgress(350,100,5,300.25);
+    GameProgress gamePr_1= new GameProgress(400,85,6,350.25);
+    GameProgress gamePr_2= new GameProgress(250,65,6,150.25);
 
     public Main() throws IOException {
         initGames();
@@ -36,13 +39,21 @@ public class Main {
 
     // ---------------------
     private void gamerecording() throws IOException {
-        textLog = new StringBuilder("\n"+new Date());
-        saveGame("D:/Games/savegames/", 350, 100, 5, 300.25);
-        saveGame("D:/Games/savegames/", 400, 85, 6, 350.25);
-        saveGame("D:/Games/savegames/", 250, 65, 6, 150.5);
+        textLog = new StringBuilder("\n"+ new Date());
+        saveGame("D:/Games/savegames/",gamePr);
+        saveGame("D:/Games/savegames/",gamePr_1);
+        saveGame("D:/Games/savegames/",gamePr_2);
         logSave(textLog.toString());
         zipFilesAll("D:/Games/savegames/");
     }
+//    private void gamerecording() throws IOException {
+//        textLog = new StringBuilder("\n"+new Date());
+//        saveGame("D:/Games/savegames/", 350, 100, 5, 300.25);
+//        saveGame("D:/Games/savegames/", 400, 85, 6, 350.25);
+//        saveGame("D:/Games/savegames/", 250, 65, 6, 150.5);
+//        logSave(textLog.toString());
+//        zipFilesAll("D:/Games/savegames/");
+//    }
 
     // ---------------------
     private void createDir(String[] array, String[] subcatalogs) {
@@ -94,20 +105,22 @@ public class Main {
     }
 
 
-    // ********************
-    private void saveGame(String path, int health, int weapons, int lvl, double distance) {
+   // ********************
+   // private void saveGame(String path, int health, int weapons, int lvl, double distance) {
+    private void saveGame(String path, Object gameProg) {
 
         String fileName = (index != 0 ? "save" + index + ".dat" : "save.dat");
         index++;
-        gameProgress = new GameProgress(health, weapons, lvl, distance);
-        //создаем 2 потока для сериализации объекта и сохранения его в файл
+      //  gameProgress = new GameProgress(health, weapons, lvl, distance);
+      //  создаем 2 потока для сериализации объекта и сохранения его в файл
         FileOutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream("D:\\Games\\savegames\\" + fileName);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
 
             // сохраняем игру в файл
-            objectOutputStream.writeObject(gameProgress);
+            //objectOutputStream.writeObject(gameProgress);
+            objectOutputStream.writeObject(gameProg);
 
             //закрываем поток и освобождаем ресурсы
             objectOutputStream.close();
